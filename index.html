@@ -1,9 +1,11 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Our First Year Together - Fatiya & Hersa</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/favicon.svg" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,9 +18,38 @@
         overflow-x: hidden;
         scroll-behavior: smooth;
       }
+      body.is-loading {
+        overflow: hidden;
+        height: 100%;
+      }
 
       .serif-title {
         font-family: "Cormorant Garamond", serif;
+      }
+
+      /* Splash preload */
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f7f5f0;
+        transition: opacity 0.6s ease, visibility 0.6s ease;
+      }
+      #splash.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      #splash-bar {
+        width: 0%;
+        height: 100%;
+        background: #be123c;
+        border-radius: 999px;
+        transition: width 0.2s ease;
       }
 
       /* Styling Kartu Majalah & Galeri */
@@ -117,7 +148,18 @@
     </style>
   </head>
 
-  <body class="bg-[#f7f5f0] text-[#2b2623]">
+  <body class="bg-[#f7f5f0] text-[#2b2623] is-loading">
+    <!-- Splash: preload semua foto dulu -->
+    <div id="splash" role="status" aria-live="polite" aria-busy="true">
+      <div class="text-4xl mb-4 heart-float" aria-hidden="true">❤️</div>
+      <p class="serif-title text-3xl sm:text-4xl text-stone-900 mb-2">Fatiya &amp; Hersa</p>
+      <p class="text-stone-500 text-xs tracking-[0.2em] uppercase mb-8">Memuat kenangan…</p>
+      <div class="w-48 sm:w-56 h-1.5 bg-stone-200 rounded-full overflow-hidden mb-3">
+        <div id="splash-bar"></div>
+      </div>
+      <p id="splash-progress" class="text-stone-400 text-[11px] tabular-nums">0%</p>
+    </div>
+
     <div id="youtube-player" style="position: absolute; top: -1000px; left: -1000px; visibility: hidden"></div>
 
     <!-- Lightbox Modal untuk Zoom Foto -->
@@ -180,18 +222,18 @@
       </div>
     </section>
 
-    <!-- SECTION 2: TAYANGAN ANGKA (1 HALAMAN FULL LAYOUT - MUNCUL BERURUTAN SATU PERSATU) -->
-    <section id="tayangan" class="h-[100dvh] min-h-[660px] max-h-[880px] flex flex-col justify-center px-6 bg-stone-900 text-stone-100 relative overflow-hidden">
-      <div class="absolute top-8 right-8 text-rose-400/20 text-3xl">❤️</div>
-      <div class="absolute bottom-8 left-8 text-rose-400/20 text-3xl">💕</div>
+    <!-- SECTION 2: TAYANGAN ANGKA -->
+    <section id="tayangan" class="min-h-[100svh] flex flex-col justify-center px-6 py-16 sm:py-20 bg-stone-900 text-stone-100 relative overflow-x-hidden">
+      <div class="absolute top-8 right-8 text-rose-400/20 text-3xl pointer-events-none">❤️</div>
+      <div class="absolute bottom-8 left-8 text-rose-400/20 text-3xl pointer-events-none">💕</div>
 
-      <div class="max-w-xl mx-auto w-full py-6 flex flex-col justify-center h-full">
-        <div class="text-center mb-8 reveal">
+      <div class="max-w-xl mx-auto w-full flex flex-col justify-center">
+        <div class="text-center mb-6 sm:mb-8 reveal">
           <span class="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-rose-300 font-medium block">✨ Perjalanan Waktu Kita ✨</span>
         </div>
 
         <!-- List Tampilan Satu Persatu Berurutan dengan Jeda Waktu Berbeda -->
-        <div class="space-y-6 sm:space-y-10">
+        <div class="space-y-5 sm:space-y-8">
           <!-- Item 1 -->
           <div class="reveal flex flex-col items-center text-center group" style="transition-delay: 100ms">
             <span class="serif-title text-4xl sm:text-6xl text-rose-300 font-normal mb-0.5 drop-shadow-sm">365</span>
@@ -247,16 +289,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 reveal">
           <div class="magazine-card p-4 sm:p-5 rounded-2xl">
-            <div
-              class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer"
-              onclick="openLightbox('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop')"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=700&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/700x525/e7e2d8/57534e?text=Momen+Spesial+1'"
-              />
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer" onclick="openLightbox('assets/img/001.jpg')">
+              <img src="assets/img/001.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
               <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs text-rose-700 shadow-sm">❤️ Awal Cerita</span>
             </div>
             <div>
@@ -267,16 +301,8 @@
           </div>
 
           <div class="magazine-card p-4 sm:p-5 rounded-2xl">
-            <div
-              class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer"
-              onclick="openLightbox('https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop')"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=700&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/700x525/e7e2d8/57534e?text=Momen+Spesial+2'"
-              />
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer" onclick="openLightbox('assets/img/070.jpg')">
+              <img src="assets/img/070.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_42%] group-hover:scale-105 transition-transform duration-700" />
               <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs text-rose-700 shadow-sm">✨ Perjalanan Kita</span>
             </div>
             <div>
@@ -295,122 +321,345 @@
           <span class="text-[10px] text-stone-400">Kumpulan Momen Indah</span>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 reveal">
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=1200&auto=format&fit=crop')"
-          >
+        <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/002.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+1'"
-              />
+              <img src="assets/img/002.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/003.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+2'"
-              />
+              <img src="assets/img/003.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/004.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+3'"
-              />
+              <img src="assets/img/004.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/005.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+4'"
-              />
+              <img src="assets/img/005.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <!-- <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/006.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+5'"
-              />
+              <img src="assets/img/006.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div> -->
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/007.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/007.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/008.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+6'"
-              />
+              <img src="assets/img/008.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/009.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+7'"
-              />
+              <img src="assets/img/009.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/010.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+8'"
-              />
+              <img src="assets/img/010.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
-          <div
-            class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white"
-            onclick="openLightbox('https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1200&auto=format&fit=crop')"
-          >
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/011.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img
-                src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=600&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/600x450/e7e2d8/57534e?text=Foto+9'"
-              />
+              <img src="assets/img/011.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/012.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/012.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/013.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/013.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/014.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/014.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/015.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/015.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/016.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/016.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/017.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/017.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/018.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/018.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/019.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/019.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/020.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/020.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/021.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/021.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/022.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/022.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/023.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/023.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/024.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/024.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/025.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/025.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/026.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/026.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/027.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/027.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/028.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/028.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/029.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/029.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/030.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/030.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/031.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/031.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/032.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/032.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/033.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/033.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/034.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/034.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/035.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/035.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <!-- <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/036.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/036.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div> -->
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/037.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/037.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/038.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/038.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/039.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/039.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/040.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/040.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/041.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/041.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/042.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/042.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/043.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/043.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/044.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/044.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/045.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/045.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/046.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/046.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/047.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/047.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/048.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/048.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/049.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/049.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/050.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/050.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/051.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/051.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/052.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/052.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/053.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/053.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/054.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/054.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/055.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/055.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/056.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/056.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/057.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/057.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/058.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/058.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/059.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/059.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/060.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/060.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/061.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/061.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/062.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/062.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/063.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/063.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/064.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/064.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/065.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/065.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/066.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/066.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/067.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/067.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/068.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/068.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/069.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/069.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
         </div>
@@ -424,16 +673,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 reveal">
           <div class="magazine-card p-4 sm:p-5 rounded-2xl">
-            <div
-              class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer"
-              onclick="openLightbox('https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1200&auto=format&fit=crop')"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=700&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/700x525/e7e2d8/57534e?text=Momen+Spesial+3'"
-              />
+            <div class="aspect-[3/4] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer" onclick="openLightbox('assets/img/006.jpg')">
+              <img src="assets/img/006.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
               <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs text-rose-700 shadow-sm">💞 Saling Menguatkan</span>
             </div>
             <div>
@@ -444,16 +685,8 @@
           </div>
 
           <div class="magazine-card p-4 sm:p-5 rounded-2xl">
-            <div
-              class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer"
-              onclick="openLightbox('https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop')"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=700&auto=format&fit=crop"
-                alt=""
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                onerror="this.src = 'https://placehold.co/700x525/e7e2d8/57534e?text=Momen+Spesial+4'"
-              />
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-xl mb-4 relative group cursor-pointer" onclick="openLightbox('assets/img/036.jpg')">
+              <img src="assets/img/036.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_65%] group-hover:scale-105 transition-transform duration-700" />
               <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs text-rose-700 shadow-sm">✨ Selamanya</span>
             </div>
             <div>
@@ -493,6 +726,8 @@
       let player;
       let isPlaying = false;
       let apiReady = false;
+      // Lewati intro video, langsung ke bagian musik (ubah angkanya jika perlu)
+      const MUSIC_START_SEC = 15;
 
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -509,6 +744,7 @@
             controls: 0,
             loop: 1,
             playlist: "2Vv-BfVoq4g",
+            start: MUSIC_START_SEC,
             origin: window.location.origin,
           },
           events: {
@@ -518,6 +754,10 @@
             },
             onStateChange: (event) => {
               if (event.data == YT.PlayerState.PLAYING) {
+                // Saat loop ulang dari detik 0, lompat lagi ke awal musik
+                if (event.target.getCurrentTime() < MUSIC_START_SEC - 0.5) {
+                  event.target.seekTo(MUSIC_START_SEC, true);
+                }
                 isPlaying = true;
                 document.getElementById("music-icon").textContent = "⏸️";
               } else {
@@ -534,6 +774,7 @@
         if (isPlaying) {
           player.pauseVideo();
         } else {
+          player.seekTo(MUSIC_START_SEC, true);
           player.playVideo();
         }
       }
@@ -541,10 +782,14 @@
       function startExperience() {
         document.getElementById("music-toggle").classList.add("visible");
         if (apiReady && player) {
+          player.seekTo(MUSIC_START_SEC, true);
           player.playVideo();
         } else {
           setTimeout(() => {
-            if (player) player.playVideo();
+            if (player) {
+              player.seekTo(MUSIC_START_SEC, true);
+              player.playVideo();
+            }
           }, 1000);
         }
 
@@ -573,10 +818,93 @@
             }
           });
         },
-        { threshold: 0.12 },
+        { threshold: 0.05, rootMargin: "0px 0px -40px 0px" },
       );
 
       document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+      // Splash: unduh + decode <img> asli, baru buka halaman
+      (function initAssetSplash() {
+        const splash = document.getElementById("splash");
+        const bar = document.getElementById("splash-bar");
+        const label = document.getElementById("splash-progress");
+        if (!splash) return;
+
+        const list = Array.from(document.querySelectorAll('img[src*="assets/img/"]'));
+        const total = list.length;
+        let done = 0;
+
+        function updateProgress() {
+          const pct = total ? Math.round((done / total) * 100) : 100;
+          bar.style.width = pct + "%";
+          label.textContent = pct + "%";
+        }
+
+        function finishSplash() {
+          document.body.classList.remove("is-loading");
+          splash.classList.add("is-hidden");
+          splash.setAttribute("aria-busy", "false");
+          setTimeout(() => splash.remove(), 700);
+        }
+
+        function readyImage(img) {
+          return new Promise((resolve) => {
+            img.loading = "eager";
+            img.decoding = "sync";
+
+            const settle = () => {
+              if (typeof img.decode === "function") {
+                img.decode().then(resolve).catch(resolve);
+              } else {
+                resolve();
+              }
+            };
+
+            if (img.complete && img.naturalWidth > 0) {
+              settle();
+              return;
+            }
+
+            img.onload = settle;
+            img.onerror = () => resolve();
+            // Sentuh src agar browser mulai fetch jika belum
+            img.src = img.getAttribute("src") || img.src;
+          }).finally(() => {
+            done += 1;
+            updateProgress();
+          });
+        }
+
+        if (!total) {
+          updateProgress();
+          finishSplash();
+          return;
+        }
+
+        updateProgress();
+
+        const MAX_WAIT_MS = 120000;
+        const timeoutId = setTimeout(finishSplash, MAX_WAIT_MS);
+
+        // Batasi concurrency biar HP tidak kewalahan
+        const CONCURRENCY = 6;
+        let index = 0;
+
+        async function runQueue() {
+          const workers = Array.from({ length: CONCURRENCY }, async () => {
+            while (index < list.length) {
+              const i = index++;
+              await readyImage(list[i]);
+            }
+          });
+          await Promise.all(workers);
+        }
+
+        runQueue().then(() => {
+          clearTimeout(timeoutId);
+          setTimeout(finishSplash, 280);
+        });
+      })();
     </script>
   </body>
 </html>
