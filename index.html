@@ -1,9 +1,27 @@
 ﻿<!doctype html>
-<html lang="id">
+<html lang="id" class="is-loading">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Our First Year Together - Fatiya & Hersa</title>
+    <meta
+      name="description"
+      content="Galeri digital anniversary Fatiya & Hersa — merayakan 365 hari penuh cerita sejak 1 Oktober 2025."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Our First Year Together — Fatiya & Hersa" />
+    <meta
+      property="og:description"
+      content="Satu tahun penuh tawa, cerita, dan cinta. Sejak 1 Oktober 2025."
+    />
+    <meta property="og:image" content="assets/img/001.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Our First Year Together — Fatiya & Hersa" />
+    <meta
+      name="twitter:description"
+      content="Satu tahun penuh tawa, cerita, dan cinta. Sejak 1 Oktober 2025."
+    />
+    <meta name="twitter:image" content="assets/img/001.jpg" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/favicon.svg" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,9 +36,12 @@
         overflow-x: hidden;
         scroll-behavior: smooth;
       }
+      html.is-loading,
       body.is-loading {
         overflow: hidden;
         height: 100%;
+        overscroll-behavior: none;
+        touch-action: none;
       }
 
       .serif-title {
@@ -118,6 +139,36 @@
         background-color: #faf7f2;
       }
 
+      #back-to-top {
+        position: fixed;
+        bottom: 76px;
+        right: 20px;
+        z-index: 1000;
+        background: #ffffff;
+        border: 1px solid #e7e2d8;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+        color: #be123c;
+        font-size: 1.1rem;
+      }
+      #back-to-top.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #back-to-top:hover {
+        transform: scale(1.1);
+        background-color: #faf7f2;
+      }
+
       /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 6px;
@@ -189,6 +240,11 @@
       <span id="music-icon" class="text-rose-700 text-base">🎵</span>
     </button>
 
+    <!-- Tombol kembali ke atas -->
+    <button id="back-to-top" type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" aria-label="Kembali ke atas">
+      ↑
+    </button>
+
     <!-- SECTION 1: HERO -->
     <section class="h-[100dvh] min-h-[600px] flex flex-col justify-between py-6 px-4 sm:px-6 md:p-16 max-w-6xl mx-auto relative">
       <div class="flex justify-between items-center text-[9px] sm:text-xs tracking-[0.2em] uppercase text-stone-500 font-medium">
@@ -202,11 +258,14 @@
           Happy 1st Anniversary
           <span class="heart-float">💖</span>
         </span>
-        <h1 class="serif-title text-3xl sm:text-5xl md:text-8xl font-medium tracking-tight leading-[1.1] mb-4 sm:mb-6 text-stone-900">
+        <h1 class="serif-title text-3xl sm:text-5xl md:text-8xl font-medium tracking-tight leading-[1.1] mb-3 sm:mb-4 text-stone-900">
           365 Hari
           <br />
           <span class="italic text-rose-800 font-normal">Mengarungi Waktu</span>
         </h1>
+        <p class="text-rose-800/80 text-[11px] sm:text-sm tracking-[0.18em] uppercase font-medium mb-4 sm:mb-6">
+          Sejak 1 Oktober 2025
+        </p>
         <p class="text-stone-600 text-xs sm:text-base md:text-lg font-light leading-relaxed mb-6 sm:mb-10 max-w-xl mx-auto px-2">
           Sebuah galeri digital yang merangkum satu tahun penuh cerita, tawa, dan ikatan tulus yang kita bangun bersama.
         </p>
@@ -322,8 +381,27 @@
           <h3 class="text-xs uppercase tracking-widest text-stone-500 font-semibold">📸 Galeri Memori</h3>
           <span class="text-[10px] text-stone-400">Kumpulan Momen Indah</span>
         </div>
-
         <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/068.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/068.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_7%] group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/071.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/071.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_70%] group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/072.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/072.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_50%] group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
+          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/069.jpg')">
+            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <img src="assets/img/069.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_70%] group-hover:scale-105 transition-transform duration-700" />
+            </div>
+          </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/002.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
               <img src="assets/img/002.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -336,7 +414,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/004.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/004.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/004.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/005.jpg')">
@@ -366,7 +444,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/010.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/010.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/010.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/011.jpg')">
@@ -376,7 +454,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/012.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/012.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/012.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/013.jpg')">
@@ -406,7 +484,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/018.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/018.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/018.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/019.jpg')">
@@ -421,17 +499,17 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/021.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/021.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/021.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/022.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/022.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/022.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_90%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/023.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/023.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/023.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_80%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/024.jpg')">
@@ -456,7 +534,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/028.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/028.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/028.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/029.jpg')">
@@ -466,7 +544,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/030.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/030.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/030.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/031.jpg')">
@@ -476,7 +554,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/032.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/032.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/032.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_40%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/033.jpg')">
@@ -501,7 +579,7 @@
           </div> -->
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/037.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/037.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/037.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_80%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/038.jpg')">
@@ -526,12 +604,12 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/042.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/042.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/042.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/043.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/043.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/043.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/044.jpg')">
@@ -551,7 +629,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/047.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/047.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/047.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/048.jpg')">
@@ -561,7 +639,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/049.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/049.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/049.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/050.jpg')">
@@ -576,7 +654,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/052.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/052.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/052.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/053.jpg')">
@@ -586,12 +664,12 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/054.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/054.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/054.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_40%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/055.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/055.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/055.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/056.jpg')">
@@ -616,7 +694,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/060.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/060.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/060.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/061.jpg')">
@@ -651,17 +729,7 @@
           </div>
           <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/067.jpg')">
             <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/067.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            </div>
-          </div>
-          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/068.jpg')">
-            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/068.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            </div>
-          </div>
-          <div class="gallery-item p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white" onclick="openLightbox('assets/img/069.jpg')">
-            <div class="aspect-[4/3] bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
-              <img src="assets/img/069.jpg" alt="" decoding="sync" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src="assets/img/067.jpg" alt="" decoding="sync" class="w-full h-full object-cover object-[center_90%] group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
         </div>
@@ -729,7 +797,7 @@
       let isPlaying = false;
       let apiReady = false;
       // Lewati intro video, langsung ke bagian musik (ubah angkanya jika perlu)
-      const MUSIC_START_SEC = 20;
+      const MUSIC_START_SEC = 21;
 
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -825,6 +893,18 @@
 
       document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
+      // Tombol kembali ke atas
+      (function initBackToTop() {
+        const btn = document.getElementById("back-to-top");
+        if (!btn) return;
+        const toggle = () => {
+          if (window.scrollY > 420) btn.classList.add("visible");
+          else btn.classList.remove("visible");
+        };
+        window.addEventListener("scroll", toggle, { passive: true });
+        toggle();
+      })();
+
       // Splash: unduh + decode <img> asli, baru buka halaman
       (function initAssetSplash() {
         const splash = document.getElementById("splash");
@@ -843,11 +923,23 @@
         }
 
         function finishSplash() {
+          window.scrollTo(0, 0);
+          document.documentElement.classList.remove("is-loading");
           document.body.classList.remove("is-loading");
           splash.classList.add("is-hidden");
           splash.setAttribute("aria-busy", "false");
+          document.removeEventListener("touchmove", lockTouchScroll, { passive: false });
+          document.removeEventListener("wheel", lockTouchScroll, { passive: false });
           setTimeout(() => splash.remove(), 700);
         }
+
+        function lockTouchScroll(e) {
+          e.preventDefault();
+        }
+
+        document.addEventListener("touchmove", lockTouchScroll, { passive: false });
+        document.addEventListener("wheel", lockTouchScroll, { passive: false });
+        window.scrollTo(0, 0);
 
         function readyImage(img) {
           return new Promise((resolve) => {
