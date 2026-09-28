@@ -204,10 +204,11 @@
 
     <div id="youtube-player" style="position: absolute; top: -1000px; left: -1000px; visibility: hidden"></div>
 
-    <!-- Lightbox Modal untuk Zoom Foto -->
+    <!-- Lightbox Modal untuk Zoom Foto / Video -->
     <div id="lightbox" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeLightbox()">
-      <div class="relative max-w-4xl max-h-[90dvh] w-full flex items-center justify-center" onclick="event.stopPropagation()">
+      <div class="relative max-w-5xl max-h-[90dvh] w-full flex items-center justify-center" onclick="event.stopPropagation()">
         <img id="lightbox-img" src="" alt="Zoomed Photo" class="max-h-[85dvh] max-w-full object-contain rounded-xl shadow-2xl border border-stone-700" />
+        <video id="lightbox-video" class="hidden max-h-[85dvh] max-w-full rounded-xl shadow-2xl border border-stone-700 bg-black" controls playsinline loop muted></video>
         <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white bg-white/20 hover:bg-white/40 rounded-full w-10 h-10 flex items-center justify-center text-lg transition-colors">
           ✕
         </button>
@@ -226,7 +227,7 @@
 
     <!-- Tombol Play/Pause Musik Interaktif -->
     <button id="music-toggle" onclick="toggleMusic()" aria-label="Toggle Music">
-      <span id="music-icon" class="text-rose-700 text-base">🎵</span>
+      <span id="music-icon" class="text-rose-700 text-base">⏸️</span>
     </button>
 
     <!-- Tombol kembali ke atas -->
@@ -720,6 +721,45 @@
         </div>
       </div>
 
+      <!-- CUPLIKAN VIDEO (sebelum Chapter III–IV) -->
+      <div id="cuplikan-video" class="mb-16">
+        <div class="flex items-center justify-between mb-4 px-1 reveal">
+          <h3 class="text-xs uppercase tracking-widest text-stone-500 font-semibold">🎬 Cuplikan Kenangan</h3>
+          <span class="text-[10px] text-stone-400">Moving Memories</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 sm:gap-6 reveal">
+          <div class="magazine-card p-2 sm:p-3 rounded-xl sm:rounded-2xl cursor-pointer" onclick="openVideoLightbox('assets/video/001.mp4')">
+            <div class="aspect-video bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <video class="w-full h-full object-cover object-[center_55%] pointer-events-none" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/video/001.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <div class="magazine-card p-2 sm:p-3 rounded-xl sm:rounded-2xl cursor-pointer" onclick="openVideoLightbox('assets/video/002.mp4')">
+            <div class="aspect-video bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <video class="w-full h-full object-cover pointer-events-none" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/video/002.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <div class="magazine-card p-2 sm:p-3 rounded-xl sm:rounded-2xl cursor-pointer" onclick="openVideoLightbox('assets/video/003.mp4')">
+            <div class="aspect-video bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <video class="w-full h-full object-cover pointer-events-none" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/video/003.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <div class="magazine-card p-2 sm:p-3 rounded-xl sm:rounded-2xl cursor-pointer" onclick="openVideoLightbox('assets/video/004.mp4')">
+            <div class="aspect-video bg-stone-100 overflow-hidden rounded-lg sm:rounded-xl relative group">
+              <video class="w-full h-full object-cover pointer-events-none" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/video/004.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 3. MOMEN SPESIAL DI AKHIR -->
       <div>
         <div class="mb-4 px-1 reveal">
@@ -782,7 +822,7 @@
       let isPlaying = false;
       let apiReady = false;
       // Lewati intro video, langsung ke bagian musik (ubah angkanya jika perlu)
-      const MUSIC_START_SEC = 21;
+      const MUSIC_START_SEC = 20;
 
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -808,16 +848,20 @@
               event.target.setVolume(100);
             },
             onStateChange: (event) => {
+              const musicBtn = document.getElementById("music-toggle");
+              const musicIcon = document.getElementById("music-icon");
               if (event.data == YT.PlayerState.PLAYING) {
                 // Saat loop ulang dari detik 0, lompat lagi ke awal musik
                 if (event.target.getCurrentTime() < MUSIC_START_SEC - 0.5) {
                   event.target.seekTo(MUSIC_START_SEC, true);
                 }
                 isPlaying = true;
-                document.getElementById("music-icon").textContent = "⏸️";
+                musicIcon.textContent = "⏸️";
+                musicBtn.classList.add("visible");
               } else {
                 isPlaying = false;
-                document.getElementById("music-icon").textContent = "▶️";
+                musicIcon.textContent = "⏸️";
+                musicBtn.classList.remove("visible");
               }
             },
           },
@@ -835,7 +879,6 @@
       }
 
       function startExperience() {
-        document.getElementById("music-toggle").classList.add("visible");
         if (apiReady && player) {
           player.seekTo(MUSIC_START_SEC, true);
           player.playVideo();
@@ -852,17 +895,57 @@
         document.getElementById("tayangan").scrollIntoView({ behavior: "smooth" });
       }
 
-      // Fungsi Lightbox Pop-up Foto
+      // Fungsi Lightbox Pop-up Foto / Video
       function openLightbox(imgSrc) {
         const lightbox = document.getElementById("lightbox");
         const lightboxImg = document.getElementById("lightbox-img");
+        const lightboxVideo = document.getElementById("lightbox-video");
+        lightboxVideo.pause();
+        lightboxVideo.removeAttribute("src");
+        lightboxVideo.load();
+        lightboxVideo.classList.add("hidden");
+        lightboxImg.classList.remove("hidden");
         lightboxImg.src = imgSrc;
         lightbox.classList.remove("hidden");
       }
 
+      function openVideoLightbox(videoSrc) {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        const lightboxVideo = document.getElementById("lightbox-video");
+        lightboxImg.classList.add("hidden");
+        lightboxImg.removeAttribute("src");
+        lightboxVideo.classList.remove("hidden");
+        lightboxVideo.src = videoSrc;
+        lightboxVideo.muted = true;
+        lightbox.classList.remove("hidden");
+        lightboxVideo.play().catch(() => {});
+
+        // Pause preview video di grid sementara lightbox terbuka
+        document.querySelectorAll("#cuplikan-video video").forEach((v) => v.pause());
+      }
+
       function closeLightbox() {
         const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        const lightboxVideo = document.getElementById("lightbox-video");
         lightbox.classList.add("hidden");
+        lightboxImg.removeAttribute("src");
+        lightboxVideo.pause();
+        lightboxVideo.removeAttribute("src");
+        lightboxVideo.load();
+        lightboxVideo.classList.add("hidden");
+        lightboxImg.classList.remove("hidden");
+
+        // Lanjutkan preview video yang sedang terlihat
+        document.querySelectorAll("#cuplikan-video video").forEach((v) => {
+          const rect = v.getBoundingClientRect();
+          const visible = rect.top < window.innerHeight && rect.bottom > 0;
+          if (visible) {
+            v.muted = true;
+            v.play().catch(() => {});
+          }
+        });
       }
 
       const observer = new IntersectionObserver(
@@ -888,6 +971,32 @@
         };
         window.addEventListener("scroll", toggle, { passive: true });
         toggle();
+      })();
+
+      // Video ambient: autoplay muted + play saat terlihat
+      (function initAmbientVideos() {
+        const videos = Array.from(document.querySelectorAll("#cuplikan-video video"));
+        if (!videos.length) return;
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const video = entry.target;
+              if (entry.isIntersecting) {
+                video.muted = true;
+                video.play().catch(() => {});
+              } else {
+                video.pause();
+              }
+            });
+          },
+          { threshold: 0.35 },
+        );
+
+        videos.forEach((video) => {
+          video.muted = true;
+          io.observe(video);
+        });
       })();
 
       // Splash: unduh + decode <img> asli, baru buka halaman
