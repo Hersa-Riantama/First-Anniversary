@@ -37,6 +37,30 @@
         font-family: "Cormorant Garamond", serif;
       }
 
+      /* Password gate */
+      #gate {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f7f5f0;
+        padding: 1.5rem;
+        transition:
+          opacity 0.5s ease,
+          visibility 0.5s ease;
+      }
+      #gate.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      #gate-error {
+        min-height: 1.25rem;
+      }
+
       /* Splash preload */
       #splash {
         position: fixed;
@@ -50,6 +74,10 @@
         transition:
           opacity 0.6s ease,
           visibility 0.6s ease;
+      }
+      #splash.is-waiting {
+        visibility: hidden;
+        pointer-events: none;
       }
       #splash.is-hidden {
         opacity: 0;
@@ -191,8 +219,29 @@
   </head>
 
   <body class="bg-[#f7f5f0] text-[#2b2623] is-loading">
+    <!-- Gate: password sederhana -->
+    <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+      <div class="text-4xl mb-4 heart-float" aria-hidden="true">🔒</div>
+      <p id="gate-title" class="serif-title text-3xl sm:text-4xl text-stone-900 mb-2">Fatiya &amp; Hersa</p>
+      <p class="text-stone-500 text-xs tracking-[0.2em] uppercase mb-8">Masukkan kata sandi</p>
+      <form id="gate-form" class="w-full max-w-xs flex flex-col items-center gap-3">
+        <input
+          id="gate-input"
+          type="password"
+          inputmode="numeric"
+          autocomplete="off"
+          maxlength="12"
+          placeholder="••••••"
+          class="w-full text-center tracking-[0.35em] text-lg px-4 py-3 rounded-full border border-stone-300 bg-white text-stone-900 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+        />
+        <button type="submit" class="w-full bg-stone-900 text-white px-6 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-medium hover:bg-rose-800 transition-colors">Buka</button>
+        <p id="gate-error" class="text-rose-700 text-xs text-center"></p>
+        <p class="text-stone-400 text-[10px] tracking-wide text-center mt-2">Petunjuk: tanggal spesial kita (DDMMYY)</p>
+      </form>
+    </div>
+
     <!-- Splash: preload semua foto dulu -->
-    <div id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div id="splash" class="is-waiting" role="status" aria-live="polite" aria-busy="true">
       <div class="text-4xl mb-4 heart-float" aria-hidden="true">❤️</div>
       <p class="serif-title text-3xl sm:text-4xl text-stone-900 mb-2">Fatiya &amp; Hersa</p>
       <p class="text-stone-500 text-xs tracking-[0.2em] uppercase mb-8">Memuat kenangan…</p>
@@ -802,7 +851,7 @@
         <h3 class="serif-title text-3xl sm:text-4xl font-medium text-stone-900 mb-6 sm:mb-8">Catatan Untuk Fatiya</h3>
         <p class="serif-title text-lg sm:text-2xl text-stone-700 italic leading-relaxed mb-10 sm:mb-12 font-normal">
           "Tidak terasa sudah satu tahun kita melangkah bersama. Terima kasih sudah menjadi tempat pulang yang paling nyaman, penyemangat di kala lelah, dan alasan di balik senyuman di setiap hariku.
-          Aku mencintaimu, hari ini, esok, dan selamanya."
+          Aku berharap kita tetap memilih satu sama lain. Aku mencintaimu, hari ini, esok, dan selamanya."
         </p>
         <div class="inline-block border-t border-stone-300 pt-6 px-8 sm:px-12">
           <p class="text-[10px] uppercase tracking-[0.25em] text-stone-400 mb-1 font-medium">Selamanya milikmu,</p>
@@ -999,98 +1048,145 @@
         });
       })();
 
-      // Splash: unduh + decode <img> asli, baru buka halaman
-      (function initAssetSplash() {
+      // Gate password + splash preload
+      (function initGateAndSplash() {
+        const SITE_PASSWORD = "011025";
+        const STORAGE_KEY = "fatiya-hersa-unlocked";
+
+        const gate = document.getElementById("gate");
+        const form = document.getElementById("gate-form");
+        const input = document.getElementById("gate-input");
+        const error = document.getElementById("gate-error");
         const splash = document.getElementById("splash");
-        const bar = document.getElementById("splash-bar");
-        const label = document.getElementById("splash-progress");
-        if (!splash) return;
-
-        const list = Array.from(document.querySelectorAll('img[src*="assets/img/"]'));
-        const total = list.length;
-        let done = 0;
-
-        function updateProgress() {
-          const pct = total ? Math.round((done / total) * 100) : 100;
-          bar.style.width = pct + "%";
-          label.textContent = pct + "%";
-        }
-
-        function finishSplash() {
-          window.scrollTo(0, 0);
-          document.documentElement.classList.remove("is-loading");
-          document.body.classList.remove("is-loading");
-          splash.classList.add("is-hidden");
-          splash.setAttribute("aria-busy", "false");
-          document.removeEventListener("touchmove", lockTouchScroll, { passive: false });
-          document.removeEventListener("wheel", lockTouchScroll, { passive: false });
-          setTimeout(() => splash.remove(), 700);
-        }
+        if (!gate || !splash) return;
 
         function lockTouchScroll(e) {
           e.preventDefault();
         }
 
-        document.addEventListener("touchmove", lockTouchScroll, { passive: false });
-        document.addEventListener("wheel", lockTouchScroll, { passive: false });
-        window.scrollTo(0, 0);
+        function startScrollLock() {
+          document.addEventListener("touchmove", lockTouchScroll, { passive: false });
+          document.addEventListener("wheel", lockTouchScroll, { passive: false });
+          window.scrollTo(0, 0);
+        }
 
-        function readyImage(img) {
-          return new Promise((resolve) => {
-            img.loading = "eager";
-            img.decoding = "sync";
+        function unlockGate() {
+          try {
+            localStorage.setItem(STORAGE_KEY, "1");
+          } catch (_) {}
+          gate.classList.add("is-hidden");
+          setTimeout(() => gate.remove(), 500);
+          splash.classList.remove("is-waiting");
+          startAssetSplash();
+        }
 
-            const settle = () => {
-              if (typeof img.decode === "function") {
-                img.decode().then(resolve).catch(resolve);
-              } else {
-                resolve();
+        function startAssetSplash() {
+          const bar = document.getElementById("splash-bar");
+          const label = document.getElementById("splash-progress");
+          const list = Array.from(document.querySelectorAll('img[src*="assets/img/"]'));
+          const total = list.length;
+          let done = 0;
+
+          startScrollLock();
+
+          function updateProgress() {
+            const pct = total ? Math.round((done / total) * 100) : 100;
+            if (bar) bar.style.width = pct + "%";
+            if (label) label.textContent = pct + "%";
+          }
+
+          function finishSplash() {
+            window.scrollTo(0, 0);
+            document.documentElement.classList.remove("is-loading");
+            document.body.classList.remove("is-loading");
+            splash.classList.add("is-hidden");
+            splash.setAttribute("aria-busy", "false");
+            document.removeEventListener("touchmove", lockTouchScroll, { passive: false });
+            document.removeEventListener("wheel", lockTouchScroll, { passive: false });
+            setTimeout(() => splash.remove(), 700);
+          }
+
+          function readyImage(img) {
+            return new Promise((resolve) => {
+              img.loading = "eager";
+              img.decoding = "sync";
+
+              const settle = () => {
+                if (typeof img.decode === "function") {
+                  img.decode().then(resolve).catch(resolve);
+                } else {
+                  resolve();
+                }
+              };
+
+              if (img.complete && img.naturalWidth > 0) {
+                settle();
+                return;
               }
-            };
 
-            if (img.complete && img.naturalWidth > 0) {
-              settle();
-              return;
-            }
+              img.onload = settle;
+              img.onerror = () => resolve();
+              img.src = img.getAttribute("src") || img.src;
+            }).finally(() => {
+              done += 1;
+              updateProgress();
+            });
+          }
 
-            img.onload = settle;
-            img.onerror = () => resolve();
-            // Sentuh src agar browser mulai fetch jika belum
-            img.src = img.getAttribute("src") || img.src;
-          }).finally(() => {
-            done += 1;
+          if (!total) {
             updateProgress();
+            finishSplash();
+            return;
+          }
+
+          updateProgress();
+
+          const MAX_WAIT_MS = 120000;
+          const timeoutId = setTimeout(finishSplash, MAX_WAIT_MS);
+          const CONCURRENCY = 6;
+          let index = 0;
+
+          async function runQueue() {
+            const workers = Array.from({ length: CONCURRENCY }, async () => {
+              while (index < list.length) {
+                const i = index++;
+                await readyImage(list[i]);
+              }
+            });
+            await Promise.all(workers);
+          }
+
+          runQueue().then(() => {
+            clearTimeout(timeoutId);
+            setTimeout(finishSplash, 280);
           });
         }
 
-        if (!total) {
-          updateProgress();
-          finishSplash();
+        startScrollLock();
+
+        let alreadyUnlocked = false;
+        try {
+          alreadyUnlocked = localStorage.getItem(STORAGE_KEY) === "1";
+        } catch (_) {}
+
+        if (alreadyUnlocked) {
+          unlockGate();
           return;
         }
 
-        updateProgress();
+        if (input) input.focus();
 
-        const MAX_WAIT_MS = 120000;
-        const timeoutId = setTimeout(finishSplash, MAX_WAIT_MS);
-
-        // Batasi concurrency biar HP tidak kewalahan
-        const CONCURRENCY = 6;
-        let index = 0;
-
-        async function runQueue() {
-          const workers = Array.from({ length: CONCURRENCY }, async () => {
-            while (index < list.length) {
-              const i = index++;
-              await readyImage(list[i]);
-            }
-          });
-          await Promise.all(workers);
-        }
-
-        runQueue().then(() => {
-          clearTimeout(timeoutId);
-          setTimeout(finishSplash, 280);
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const value = (input.value || "").trim();
+          if (value === SITE_PASSWORD) {
+            error.textContent = "";
+            unlockGate();
+          } else {
+            error.textContent = "Kata sandi belum tepat, coba lagi 💕";
+            input.value = "";
+            input.focus();
+          }
         });
       })();
     </script>
